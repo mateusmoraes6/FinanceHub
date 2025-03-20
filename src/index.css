@@ -1,0 +1,160 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    @apply bg-bg-primary text-white-primary;
+  }
+  
+  body {
+    font-family: 'Roboto', sans-serif;
+    @apply bg-bg-primary text-white-primary;
+  }
+  
+  h1 {
+    @apply font-montserrat font-bold text-h1 tracking-wide;
+  }
+  
+  h2 {
+    @apply font-montserrat font-semibold text-h2 tracking-wide;
+  }
+  
+  h3 {
+    @apply font-montserrat font-medium text-h3 tracking-wide;
+  }
+  
+  .text-highlight {
+    @apply font-inter font-semibold text-text-highlight;
+  }
+  
+  .text-body {
+    @apply font-roboto font-normal text-text-body leading-relaxed;
+  }
+  
+  .text-secondary {
+    @apply font-roboto font-light text-text-secondary text-gray-light;
+  }
+  
+  .numeric-large {
+    @apply font-dm-mono font-medium text-numeric-large tracking-tight;
+  }
+  
+  .numeric-table {
+    @apply font-dm-mono font-normal text-numeric-table;
+  }
+
+  /* Smooth transitions for all interactive elements */
+  button, a, input, select, textarea {
+    @apply transition-all duration-300;
+  }
+}
+
+@layer components {
+  .card {
+    @apply bg-bg-secondary rounded-xl border border-bg-tertiary shadow-md overflow-hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .card:hover {
+    @apply shadow-lg;
+    transform: translateY(-2px);
+  }
+  
+  .card-header {
+    @apply p-6 border-b border-bg-tertiary;
+  }
+  
+  .card-body {
+    @apply p-6;
+  }
+  
+  .btn {
+    @apply px-4 py-2 rounded-lg font-medium transition-all duration-300;
+  }
+  
+  .btn-primary {
+    @apply bg-purple-primary text-white-primary hover:bg-opacity-90 hover:shadow-md;
+  }
+  
+  .btn-secondary {
+    @apply bg-bg-tertiary text-white-primary hover:bg-opacity-80;
+  }
+  
+  .btn-danger {
+    @apply bg-red-alert text-white-primary hover:bg-opacity-90;
+  }
+  
+  .badge {
+    @apply inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium;
+  }
+}
+
+@layer utilities {
+  .animate-fadeIn {
+    animation: fadeIn 0.5s ease-in-out;
+  }
+  
+  .animate-slideIn {
+    animation: slideIn 0.5s ease-in-out;
+  }
+  
+  .animate-pulse {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-bg-tertiary;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-gray-medium;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-gray-light;
+}
