@@ -1,9 +1,13 @@
 import React, { useState } from 'react';
-import { LayoutDashboard, PlusCircle } from 'lucide-react';
+import { LayoutDashboard, PlusCircle, Target } from 'lucide-react';
 import BalanceCard from './components/BalanceCard';
 import TransactionList from './components/TransactionList';
 import TransactionForm from './components/TransactionForm';
-import type { Transaction, Category } from './types/finance';
+import FinancialGoalList from './components/FinancialGoalList';
+import PredictiveAnalysis from './components/PredictiveAnalysis';
+import BudgetPlanner from './components/BudgetPlanner';
+import InvestmentDashboard from './components/InvestmentDashboard';
+import type { Transaction, Category, FinancialGoal, Budget, Investment } from './types/finance';
 
 function App() {
   const [showForm, setShowForm] = useState(false);
@@ -23,6 +27,80 @@ function App() {
     { id: '1', name: 'Salário', type: 'income', color: '#00E676' },
     { id: '2', name: 'Alimentação', type: 'expense', color: '#FF5252' },
     { id: '3', name: 'Investimentos', type: 'investment', color: '#7B61FF' }
+  ]);
+
+  const [financialGoals, setFinancialGoals] = useState<FinancialGoal[]>([
+    {
+      id: '1',
+      title: 'Reserva de emergência',
+      targetAmount: 20000,
+      currentAmount: 5000,
+      category: 'Investimentos',
+      endDate: '2024-12-31',
+      timeframe: 'medium',
+      description: 'Fundo para emergências equivalente a 6 meses de despesas',
+      color: '#7B61FF'
+    }
+  ]);
+
+  const [budgets, setBudgets] = useState<Budget[]>([
+    {
+      id: '1',
+      name: 'Orçamento Mensal',
+      month: '3/2024',
+      year: '2024',
+      totalBudget: 3000,
+      items: [
+        {
+          id: '1',
+          category: 'Alimentação',
+          budgetAmount: 1500,
+          spentAmount: 0,
+          month: '3/2024',
+          year: '2024'
+        },
+        {
+          id: '2',
+          category: 'Investimentos',
+          budgetAmount: 1500,
+          spentAmount: 0,
+          month: '3/2024',
+          year: '2024'
+        }
+      ]
+    }
+  ]);
+
+  const [investments, setInvestments] = useState<Investment[]>([
+    {
+      id: '1',
+      name: 'Tesouro IPCA+',
+      type: 'bond',
+      amount: 10000,
+      currentValue: 10600,
+      purchaseDate: '2023-09-15',
+      riskLevel: 'low',
+      interestRate: 5.75,
+      notes: 'Vencimento em 2029'
+    },
+    {
+      id: '2',
+      name: 'Ações PETR4',
+      type: 'stock',
+      amount: 5000,
+      currentValue: 5400,
+      purchaseDate: '2023-11-20',
+      riskLevel: 'medium'
+    },
+    {
+      id: '3',
+      name: 'Bitcoin',
+      type: 'crypto',
+      amount: 3000,
+      currentValue: 3650,
+      purchaseDate: '2023-12-10',
+      riskLevel: 'high'
+    }
   ]);
 
   const handleAddTransaction = (newTransaction: Omit<Transaction, 'id'>) => {
@@ -59,6 +137,60 @@ function App() {
     setCategories([...categories, category]);
   };
 
+  const handleAddGoal = (newGoal: Omit<FinancialGoal, 'id'>) => {
+    const goal = {
+      ...newGoal,
+      id: Math.random().toString(36).substr(2, 9)
+    };
+    setFinancialGoals([...financialGoals, goal]);
+  };
+
+  const handleUpdateGoal = (updatedGoal: FinancialGoal) => {
+    setFinancialGoals(financialGoals.map(g => 
+      g.id === updatedGoal.id ? updatedGoal : g
+    ));
+  };
+
+  const handleDeleteGoal = (id: string) => {
+    setFinancialGoals(financialGoals.filter(g => g.id !== id));
+  };
+
+  const handleSaveBudget = (newBudget: Omit<Budget, 'id'>) => {
+    const budget = {
+      ...newBudget,
+      id: Math.random().toString(36).substr(2, 9)
+    };
+    setBudgets([...budgets, budget]);
+  };
+
+  const handleUpdateBudget = (updatedBudget: Budget) => {
+    setBudgets(budgets.map(b => 
+      b.id === updatedBudget.id ? updatedBudget : b
+    ));
+  };
+
+  const handleDeleteBudget = (id: string) => {
+    setBudgets(budgets.filter(b => b.id !== id));
+  };
+
+  const handleAddInvestment = (newInvestment: Omit<Investment, 'id'>) => {
+    const investment = {
+      ...newInvestment,
+      id: Math.random().toString(36).substr(2, 9)
+    };
+    setInvestments([...investments, investment]);
+  };
+
+  const handleUpdateInvestment = (updatedInvestment: Investment) => {
+    setInvestments(investments.map(i => 
+      i.id === updatedInvestment.id ? updatedInvestment : i
+    ));
+  };
+
+  const handleDeleteInvestment = (id: string) => {
+    setInvestments(investments.filter(i => i.id !== id));
+  };
+
   const summary = transactions.reduce(
     (acc, transaction) => {
       const amount = Math.abs(transaction.amount);
@@ -90,7 +222,7 @@ function App() {
             <div className="flex items-center">
               <LayoutDashboard className="w-8 h-8 text-turquoise transition-transform hover:scale-110 duration-300" />
               <span className="ml-3 text-xl font-montserrat font-semibold text-white-primary tracking-wide">
-                FinançasVis
+                FNHUB
               </span>
             </div>
             <div className="flex items-center space-x-4">
@@ -151,6 +283,44 @@ function App() {
             />
           </div>
         )}
+
+        {/* Investment Dashboard */}
+        <div className="mb-10">
+          <InvestmentDashboard 
+            investments={investments}
+            onAddInvestment={handleAddInvestment}
+            onUpdateInvestment={handleUpdateInvestment}
+            onDeleteInvestment={handleDeleteInvestment}
+          />
+        </div>
+
+        {/* Financial Goals */}
+        <div className="mb-10">
+          <FinancialGoalList 
+            goals={financialGoals}
+            categories={categories}
+            onAddGoal={handleAddGoal}
+            onUpdateGoal={handleUpdateGoal}
+            onDeleteGoal={handleDeleteGoal}
+          />
+        </div>
+
+        {/* Predictive Analysis */}
+        <div className="mb-10">
+          <PredictiveAnalysis transactions={transactions} />
+        </div>
+
+        {/* Budget Planner */}
+        <div className="mb-10">
+          <BudgetPlanner 
+            transactions={transactions}
+            categories={categories}
+            budgets={budgets}
+            onSaveBudget={handleSaveBudget}
+            onUpdateBudget={handleUpdateBudget}
+            onDeleteBudget={handleDeleteBudget}
+          />
+        </div>
 
         {/* Transactions */}
         <TransactionList
