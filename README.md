@@ -1,10 +1,8 @@
-# FinançasVis - Controle Financeiro Pessoal
-
-![FinançasVis](https://via.placeholder.com/800x400?text=Finan%C3%A7asVis)
+# FinanceHub - Controle Financeiro Pessoal
 
 ## 📋 Sobre o Projeto
 
-FinançasVis é uma aplicação web moderna de controle financeiro pessoal que permite aos usuários gerenciar suas finanças de forma intuitiva e visual. Desenvolvida com React, TypeScript e Tailwind CSS, a aplicação oferece uma interface responsiva e amigável para o controle de transações financeiras.
+FinanceHub é uma aplicação web moderna de controle financeiro pessoal que permite aos usuários gerenciar suas finanças de forma intuitiva e visual. Desenvolvida com React, TypeScript e Tailwind CSS, a aplicação oferece uma interface responsiva e amigável para o controle de transações financeiras.
 
 ## ✨ Funcionalidades
 
@@ -27,15 +25,15 @@ FinançasVis é uma aplicação web moderna de controle financeiro pessoal que p
 ## 🔧 Instalação e Uso
 
 ### Pré-requisitos
-- Node.js (versão 14 ou superior)
+- Node.js 
 - npm ou yarn
 
 ### Instalação
 
 1. Clone o repositório:
 ```bash
-git clone https://github.com/seu-usuario/financasvis.git
-cd financasvis
+git clone https://github.com/seu-usuario/FinanceHub.git
+cd FinanceHub
 ```
 
 2. Instale as dependências:
