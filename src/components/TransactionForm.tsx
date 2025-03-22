@@ -103,22 +103,22 @@ const TransactionForm: React.FC<TransactionFormProps> = ({
           </div>
         </div>
 
+        <div className="mb-4">
+          <label htmlFor="type" className="block text-sm font-medium text-white-secondary mb-1">
+            Tipo de Transação
+          </label>
+          <select
+            id="type"
+            value={transaction.type}
+            onChange={(e) => setTransaction({ ...transaction, type: e.target.value as TransactionType })}
+            className="w-full bg-bg-primary border border-bg-tertiary rounded-lg p-2.5 text-white-primary"
+          >
+            <option value="income">Receita</option>
+            <option value="expense">Despesa</option>
+          </select>
+        </div>
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-300 mb-1">
-              Tipo
-            </label>
-            <select
-              value={transaction.type}
-              onChange={(e) => setTransaction({ ...transaction, type: e.target.value as TransactionType })}
-              className="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              required
-            >
-              <option value="expense">Despesa</option>
-              <option value="income">Receita</option>
-              <option value="investment">Investimento</option>
-            </select>
-          </div>
           <div>
             <label className="block text-sm font-medium text-gray-300 mb-1">
               Categoria
@@ -207,19 +207,18 @@ const TransactionForm: React.FC<TransactionFormProps> = ({
                   required
                 />
               </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-1">
-                  Tipo
+              <div className="mb-4">
+                <label htmlFor="newType" className="block text-sm font-medium text-white-secondary mb-1">
+                  Tipo de Categoria
                 </label>
                 <select
+                  id="newType"
                   value={newCategory.type}
                   onChange={(e) => setNewCategory({ ...newCategory, type: e.target.value as TransactionType })}
-                  className="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  required
+                  className="w-full bg-bg-primary border border-bg-tertiary rounded-lg p-2.5 text-white-primary"
                 >
-                  <option value="expense">Despesa</option>
                   <option value="income">Receita</option>
-                  <option value="investment">Investimento</option>
+                  <option value="expense">Despesa</option>
                 </select>
               </div>
               <div>

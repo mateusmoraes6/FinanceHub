@@ -3,6 +3,8 @@ import { ShoppingBag, Briefcase, Wallet, Pencil, Trash2 } from 'lucide-react';
 import type { Transaction, Category } from '../types/finance';
 import CategoryBadge from './CategoryBadge';
 import TransactionChart from './TransactionChart';
+import { formatDistanceToNow } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
 
 interface TransactionListProps {
   transactions: Transaction[];
@@ -23,8 +25,8 @@ const TransactionList: React.FC<TransactionListProps> = ({
         return <Wallet className="w-5 h-5 text-green-primary" />;
       case 'expense':
         return <ShoppingBag className="w-5 h-5 text-red-alert" />;
-      case 'investment':
-        return <Briefcase className="w-5 h-5 text-purple-primary" />;
+      default:
+        return <Wallet className="w-5 h-5 text-gray-500" />;
     }
   };
 
@@ -34,13 +36,35 @@ const TransactionList: React.FC<TransactionListProps> = ({
         return 'text-green-primary';
       case 'expense':
         return 'text-red-alert';
-      case 'investment':
-        return 'text-purple-primary';
+      default:
+        return 'text-gray-500';
     }
   };
 
   const getCategoryForTransaction = (transaction: Transaction) => {
     return categories.find(cat => cat.name === transaction.category);
+  };
+
+  const getBadgeColor = (transaction: Transaction): string => {
+    switch (transaction.type) {
+      case 'income':
+        return 'bg-green-bright/20 text-green-bright';
+      case 'expense':
+        return 'bg-red-500/20 text-red-500';
+      default:
+        return 'bg-gray-500/20 text-gray-500';
+    }
+  };
+
+  const getTypeLabel = (type: Transaction['type']): string => {
+    switch (type) {
+      case 'income':
+        return 'Receita';
+      case 'expense':
+        return 'Despesa';
+      default:
+        return 'Desconhecido';
+    }
   };
 
   return (

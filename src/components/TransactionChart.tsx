@@ -1,15 +1,13 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
-  LineChart,
-  Line,
+  AreaChart,
+  Area,
   XAxis,
   YAxis,
   CartesianGrid,
   Tooltip,
-  Legend,
   ResponsiveContainer,
-  Area,
-  AreaChart
+  Legend,
 } from 'recharts';
 import type { Transaction } from '../types/finance';
 
@@ -17,36 +15,50 @@ interface TransactionChartProps {
   transactions: Transaction[];
 }
 
+const processTransactions = (transactions: Transaction[]) => {
+  const monthlyData: Record<string, { month: string, income: number, expenses: number }> = {};
+  
+  // Processar transações para dados mensais
+  transactions.forEach(transaction => {
+    const date = new Date(transaction.date);
+    const monthYear = `${date.getMonth() + 1}/${date.getFullYear()}`;
+    
+    if (!monthlyData[monthYear]) {
+      monthlyData[monthYear] = {
+        month: monthYear,
+        income: 0,
+        expenses: 0,
+      };
+    }
+    
+    const existingData = monthlyData[monthYear];
+    
+    switch (transaction.type) {
+      case 'income':
+        existingData.income += transaction.amount;
+        break;
+      case 'expense':
+        existingData.expenses += transaction.amount;
+        break;
+    }
+  });
+  
+  // Converter para array e ordenar por data
+  return Object.values(monthlyData).map(data => ({
+    ...data,
+    balance: data.income - data.expenses,
+  })).sort((a, b) => {
+    const [aMonth, aYear] = a.month.split('/').map(Number);
+    const [bMonth, bYear] = b.month.split('/').map(Number);
+    
+    if (aYear !== bYear) return aYear - bYear;
+    return aMonth - bMonth;
+  });
+};
+
 const TransactionChart: React.FC<TransactionChartProps> = ({ transactions }) => {
-  const chartData = transactions
-    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
-    .reduce((acc: any[], transaction) => {
-      const date = new Date(transaction.date).toLocaleDateString('pt-BR');
-      const existingData = acc.find(item => item.date === date);
-
-      if (existingData) {
-        switch (transaction.type) {
-          case 'income':
-            existingData.income += transaction.amount;
-            break;
-          case 'expense':
-            existingData.expenses += transaction.amount;
-            break;
-          case 'investment':
-            existingData.investments += transaction.amount;
-            break;
-        }
-      } else {
-        acc.push({
-          date,
-          income: transaction.type === 'income' ? transaction.amount : 0,
-          expenses: transaction.type === 'expense' ? transaction.amount : 0,
-          investments: transaction.type === 'investment' ? transaction.amount : 0,
-        });
-      }
-
-      return acc;
-    }, []);
+  const [chartPeriod, setChartPeriod] = useState<'monthly' | 'all'>('monthly');
+  const chartData = processTransactions(transactions);
 
   // Estilo customizado para tooltip
   const CustomTooltip = ({ active, payload, label }: any) => {
@@ -63,7 +75,7 @@ const TransactionChart: React.FC<TransactionChartProps> = ({ transactions }) => 
                 ></div>
                 <span className="text-white-primary text-sm">
                   {entry.name === 'income' ? 'Receitas' : 
-                   entry.name === 'expenses' ? 'Despesas' : 'Investimentos'}
+                   entry.name === 'expenses' ? 'Despesas' : 'Saldo'}
                 </span>
               </div>
               <span className="numeric-table text-white-primary">
@@ -82,102 +94,81 @@ const TransactionChart: React.FC<TransactionChartProps> = ({ transactions }) => 
   };
 
   return (
-    <div className="card animate-slideIn">
-      <div className="card-header">
-        <h2 className="text-xl font-semibold text-white-primary mb-1">Evolução Financeira</h2>
-        <p className="text-gray-light text-sm">Acompanhe o histórico das suas movimentações</p>
+    <div className="bg-bg-secondary rounded-xl shadow-md p-6">
+      <h2 className="text-xl font-semibold text-white-primary mb-6">Histórico Financeiro</h2>
+      
+      <div className="flex space-x-4 mb-6">
+        <button
+          className={`px-4 py-2 rounded-lg transition-colors ${
+            chartPeriod === 'monthly' ? 'bg-purple-primary text-white-primary' : 'bg-bg-tertiary text-white-secondary'
+          }`}
+          onClick={() => setChartPeriod('monthly')}
+        >
+          Mensal
+        </button>
+        <button
+          className={`px-4 py-2 rounded-lg transition-colors ${
+            chartPeriod === 'all' ? 'bg-purple-primary text-white-primary' : 'bg-bg-tertiary text-white-secondary'
+          }`}
+          onClick={() => setChartPeriod('all')}
+        >
+          Todos os Períodos
+        </button>
       </div>
-      <div className="card-body">
-        <div className="h-[400px] w-full">
-          {transactions.length > 0 ? (
-            <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 20 }}>
-                <defs>
-                  <linearGradient id="colorIncome" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#00E676" stopOpacity={0.8}/>
-                    <stop offset="95%" stopColor="#00E676" stopOpacity={0.1}/>
-                  </linearGradient>
-                  <linearGradient id="colorExpenses" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#FF5252" stopOpacity={0.8}/>
-                    <stop offset="95%" stopColor="#FF5252" stopOpacity={0.1}/>
-                  </linearGradient>
-                  <linearGradient id="colorInvestments" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#7B61FF" stopOpacity={0.8}/>
-                    <stop offset="95%" stopColor="#7B61FF" stopOpacity={0.1}/>
-                  </linearGradient>
-                </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="#2D2D2D" />
-                <XAxis
-                  dataKey="date"
-                  stroke="#B0B0B0"
-                  tick={{ fill: '#B0B0B0' }}
-                  tickMargin={10}
-                />
-                <YAxis
-                  stroke="#B0B0B0"
-                  tick={{ fill: '#B0B0B0' }}
-                  tickMargin={10}
-                  tickFormatter={(value) =>
-                    new Intl.NumberFormat('pt-BR', {
-                      style: 'currency',
-                      currency: 'BRL',
-                      notation: 'compact',
-                    }).format(value)
-                  }
-                />
-                <Tooltip content={<CustomTooltip />} />
-                <Legend
-                  wrapperStyle={{ paddingTop: '1rem' }}
-                  formatter={(value) => {
-                    const labels = {
-                      income: 'Receitas',
-                      expenses: 'Despesas',
-                      investments: 'Investimentos',
-                    };
-                    return <span className="text-gray-light">{labels[value as keyof typeof labels]}</span>;
-                  }}
-                />
-                <Area
-                  type="monotone"
-                  dataKey="income"
-                  stroke="#00E676"
-                  strokeWidth={2}
-                  fillOpacity={1}
-                  fill="url(#colorIncome)"
-                  activeDot={{ r: 6, strokeWidth: 2, stroke: '#00E676', fill: '#121212' }}
-                />
-                <Area
-                  type="monotone"
-                  dataKey="expenses"
-                  stroke="#FF5252"
-                  strokeWidth={2}
-                  fillOpacity={1}
-                  fill="url(#colorExpenses)"
-                  activeDot={{ r: 6, strokeWidth: 2, stroke: '#FF5252', fill: '#121212' }}
-                />
-                <Area
-                  type="monotone"
-                  dataKey="investments"
-                  stroke="#7B61FF"
-                  strokeWidth={2}
-                  fillOpacity={1}
-                  fill="url(#colorInvestments)"
-                  activeDot={{ r: 6, strokeWidth: 2, stroke: '#7B61FF', fill: '#121212' }}
-                />
-              </AreaChart>
-            </ResponsiveContainer>
-          ) : (
-            <div className="h-full flex flex-col items-center justify-center text-center">
-              <svg className="w-16 h-16 text-gray-medium mb-3 opacity-30" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M21 21H4.6C4.03995 21 3.75992 21 3.54601 20.891C3.35785 20.7951 3.20487 20.6422 3.10899 20.454C3 20.2401 3 19.9601 3 19.4V3M21 7L15.5657 12.4343C15.3677 12.6323 15.2687 12.7313 15.1545 12.7684C15.0541 12.8011 14.9459 12.8011 14.8455 12.7684C14.7313 12.7313 14.6323 12.6323 14.4343 12.4343L12.5657 10.5657C12.3677 10.3677 12.2687 10.2687 12.1545 10.2316C12.0541 10.1989 11.9459 10.1989 11.8455 10.2316C11.7313 10.2687 11.6323 10.3677 11.4343 10.5657L7 15M21 7H17M21 7V11" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-              <h3 className="text-gray-light font-medium mb-1">Sem dados para mostrar</h3>
-              <p className="text-gray-medium text-sm max-w-md">
-                Adicione transações para visualizar os gráficos de evolução financeira
-              </p>
-            </div>
-          )}
-        </div>
+      
+      <div className="h-80">
+        <ResponsiveContainer width="100%" height="100%">
+          <AreaChart
+            data={chartData}
+            margin={{ top: 10, right: 10, left: 10, bottom: 10 }}
+          >
+            <defs>
+              <linearGradient id="colorIncome" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor="#00E676" stopOpacity={0.8} />
+                <stop offset="95%" stopColor="#00E676" stopOpacity={0} />
+              </linearGradient>
+              <linearGradient id="colorExpenses" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor="#FF5252" stopOpacity={0.8} />
+                <stop offset="95%" stopColor="#FF5252" stopOpacity={0} />
+              </linearGradient>
+            </defs>
+            <CartesianGrid strokeDasharray="3 3" stroke="#2D3748" />
+            <XAxis 
+              dataKey="month" 
+              tick={{ fill: '#E5E7EB' }}
+              axisLine={{ stroke: '#4B5563' }}
+            />
+            <YAxis 
+              tick={{ fill: '#E5E7EB' }}
+              axisLine={{ stroke: '#4B5563' }}
+              tickFormatter={(value) => `R$ ${value}`}
+            />
+            <Tooltip 
+              formatter={(value: number) => [`R$ ${value.toFixed(2)}`, undefined]}
+              labelFormatter={(label) => `Mês: ${label}`}
+              contentStyle={{ backgroundColor: '#1F2937', borderColor: '#4B5563', color: '#E5E7EB' }}
+            />
+            <Legend 
+              formatter={(value) => value === 'income' ? 'Receitas' : value === 'expenses' ? 'Despesas' : 'Saldo'}
+            />
+            <Area 
+              type="monotone" 
+              dataKey="income" 
+              name="Receitas"
+              stroke="#00E676" 
+              fillOpacity={1} 
+              fill="url(#colorIncome)" 
+            />
+            <Area 
+              type="monotone" 
+              dataKey="expenses" 
+              name="Despesas"
+              stroke="#FF5252" 
+              fillOpacity={1} 
+              fill="url(#colorExpenses)" 
+            />
+          </AreaChart>
+        </ResponsiveContainer>
       </div>
     </div>
   );

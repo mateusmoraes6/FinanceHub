@@ -6,11 +6,13 @@ FinanceHub é uma aplicação web moderna de controle financeiro pessoal que per
 
 ## ✨ Funcionalidades
 
-- **Dashboard Visual:** Visualização rápida do saldo atual, receitas, despesas e investimentos.
+- **Dashboard Visual:** Visualização rápida do saldo atual, receitas e despesas.
 - **Gerenciamento de Transações:** Adicione, edite e exclua transações financeiras.
 - **Categorização:** Organize suas transações por categorias personalizáveis.
-- **Tipos de Transações:** Suporte para receitas, despesas e investimentos.
+- **Tipos de Transações:** Suporte para receitas e despesas.
 - **Gráficos e Análises:** Visualize suas finanças através de gráficos interativos.
+- **Metas Financeiras:** Defina e acompanhe suas metas de economia.
+- **Orçamento:** Planeje e monitore seu orçamento mensal.
 - **Interface Responsiva:** Design adaptável para dispositivos móveis e desktop.
 
 ## 🚀 Tecnologias Utilizadas
@@ -64,7 +66,12 @@ src/
 │   ├── CategoryBadge.tsx     # Badge para categorias
 │   ├── TransactionChart.tsx  # Gráficos para visualização
 │   ├── TransactionForm.tsx   # Formulário de transações
-│   └── TransactionList.tsx   # Lista de transações
+│   ├── TransactionList.tsx   # Lista de transações
+│   ├── FinancialGoalList.tsx # Lista de metas financeiras
+│   ├── FinancialGoalForm.tsx # Formulário de metas financeiras
+│   ├── FinancialGoalCard.tsx # Cartão de meta financeira
+│   ├── BudgetPlanner.tsx     # Planejador de orçamento
+│   └── PredictiveAnalysis.tsx # Análise preditiva
 ├── types/              # Definições de tipos TypeScript
 │   └── finance.ts      # Tipos relacionados às finanças
 ├── App.tsx             # Componente principal
@@ -75,7 +82,7 @@ src/
 ## 🧩 Principais Componentes
 
 ### BalanceCard
-Exibe cartões com informações de saldo, receitas, despesas e investimentos.
+Exibe cartões com informações de saldo, receitas e despesas.
 
 ### TransactionForm
 Formulário para adicionar ou editar transações, com suporte para categorias personalizadas.
@@ -86,12 +93,18 @@ Lista todas as transações com opções para filtrar, editar e excluir.
 ### TransactionChart
 Componente de visualização gráfica para análise de dados financeiros.
 
+### FinancialGoalList
+Lista e gerencia metas financeiras, como reserva de emergência ou fundo para uma viagem.
+
+### BudgetPlanner
+Permite criar e gerenciar orçamentos mensais por categoria.
+
 ## 📊 Modelo de Dados
 
 ### Transaction
 - `id`: Identificador único
 - `amount`: Valor da transação
-- `type`: Tipo (receita, despesa ou investimento)
+- `type`: Tipo (receita ou despesa)
 - `category`: Categoria da transação
 - `description`: Descrição detalhada
 - `date`: Data da transação
@@ -99,15 +112,34 @@ Componente de visualização gráfica para análise de dados financeiros.
 ### Category
 - `id`: Identificador único
 - `name`: Nome da categoria
-- `type`: Tipo associado (receita, despesa ou investimento)
+- `type`: Tipo associado (receita ou despesa)
 - `color`: Cor para representação visual
+
+### FinancialGoal
+- `id`: Identificador único
+- `title`: Nome da meta
+- `targetAmount`: Valor alvo
+- `currentAmount`: Valor atual
+- `category`: Categoria relacionada
+- `endDate`: Data limite
+- `timeframe`: Prazo (curto, médio, longo)
+
+### Budget
+- `id`: Identificador único
+- `name`: Nome do orçamento
+- `month`: Mês de referência
+- `year`: Ano de referência
+- `totalBudget`: Valor total do orçamento
+- `items`: Itens do orçamento por categoria
 
 ## 🔄 Fluxo de Trabalho
 
 1. Visualize seu resumo financeiro no dashboard
 2. Adicione novas transações com o botão "Nova Transação"
 3. Visualize, edite ou exclua transações na lista
-4. Analise seus padrões financeiros através dos gráficos
+4. Defina metas financeiras e acompanhe seu progresso
+5. Crie e gerencie seu orçamento mensal
+6. Analise seus padrões financeiros através dos gráficos
 
 ## 🛠️ Scripts Disponíveis
 
