@@ -112,17 +112,23 @@ const TransactionList: React.FC<TransactionListProps> = ({
                       <div className="flex items-center space-x-2 opacity-0 group-hover:opacity-100 transition-all duration-300">
                         <button
                           onClick={() => onEditTransaction(transaction)}
-                          className="p-1.5 rounded-full bg-bg-secondary text-gray-light hover:text-turquoise hover:bg-bg-secondary/80 transition-colors"
+                          className="p-1.5 rounded-full bg-bg-secondary text-gray-light hover:text-turquoise hover:bg-bg-secondary/80 transition-colors relative group/tooltip"
                           aria-label="Editar transação"
                         >
                           <Pencil className="w-4 h-4" />
+                          <span className="absolute -top-8 left-1/2 -translate-x-1/2 bg-bg-tertiary text-white text-xs py-1 px-2 rounded opacity-0 group-hover/tooltip:opacity-100 whitespace-nowrap pointer-events-none transition-opacity">
+                            Editar transação
+                          </span>
                         </button>
                         <button
                           onClick={() => onDeleteTransaction(transaction.id)}
-                          className="p-1.5 rounded-full bg-bg-secondary text-gray-light hover:text-red-alert hover:bg-bg-secondary/80 transition-colors"
+                          className="p-1.5 rounded-full bg-bg-secondary text-gray-light hover:text-red-alert hover:bg-bg-secondary/80 transition-colors relative group/tooltip"
                           aria-label="Excluir transação"
                         >
                           <Trash2 className="w-4 h-4" />
+                          <span className="absolute -top-8 left-1/2 -translate-x-1/2 bg-bg-tertiary text-white text-xs py-1 px-2 rounded opacity-0 group-hover/tooltip:opacity-100 whitespace-nowrap pointer-events-none transition-opacity">
+                            Excluir transação
+                          </span>
                         </button>
                       </div>
                     </div>

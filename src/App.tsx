@@ -172,14 +172,31 @@ function App() {
             </div>
             <div className="flex items-center space-x-4">
               <button
-                className="flex items-center px-5 py-2.5 bg-purple-primary text-white-primary rounded-lg hover:bg-opacity-90 transition-all duration-300 hover:shadow-lg transform hover:-translate-y-0.5"
+                className="flex items-center px-5 py-2.5 bg-gradient-to-r from-purple-primary to-turquoise text-white-primary rounded-lg 
+                hover:shadow-lg hover:shadow-purple-primary/30 transition-all duration-300 transform hover:-translate-y-0.5 relative overflow-hidden group"
                 onClick={() => {
                   setEditingTransaction(undefined);
                   setShowForm(!showForm);
                 }}
               >
-                <PlusCircle className="w-5 h-5 mr-2" />
-                {showForm ? 'Fechar' : 'Nova Transação'}
+                <span className="absolute inset-0 w-0 bg-white/20 transition-all duration-[400ms] ease-out group-hover:w-full"></span>
+                <span className="relative flex items-center">
+                  {showForm ? (
+                    <>
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                        <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                      </svg>
+                      Fechar
+                    </>
+                  ) : (
+                    <>
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                        <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />
+                      </svg>
+                      Nova Transação
+                    </>
+                  )}
+                </span>
               </button>
             </div>
           </div>
@@ -207,20 +224,35 @@ function App() {
           />
         </div>
 
-        {/* Transaction Form */}
+        {/* Transaction Form - Modal para todos os dispositivos */}
         {showForm && (
-          <div className="mb-10 animate-fadeIn">
-            <TransactionForm
-              onAddTransaction={handleAddTransaction}
-              categories={categories}
-              onAddCategory={handleAddCategory}
-              editingTransaction={editingTransaction}
-              onUpdateTransaction={handleUpdateTransaction}
-              onCancelEdit={() => {
-                setEditingTransaction(undefined);
-                setShowForm(false);
-              }}
-            />
+          <div className="fixed inset-0 bg-black bg-opacity-70 backdrop-blur-sm z-50 overflow-y-auto animate-fadeIn">
+            <div className="min-h-screen px-4 py-6 flex flex-col justify-center">
+              <div className="relative max-w-4xl mx-auto">
+                <button
+                  onClick={() => {
+                    setEditingTransaction(undefined);
+                    setShowForm(false);
+                  }}
+                  className="absolute -top-14 right-0 text-white-primary p-2 rounded-full bg-bg-tertiary/50 hover:bg-bg-tertiary transition-colors"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                  </svg>
+                </button>
+                <TransactionForm
+                  onAddTransaction={handleAddTransaction}
+                  categories={categories}
+                  onAddCategory={handleAddCategory}
+                  editingTransaction={editingTransaction}
+                  onUpdateTransaction={handleUpdateTransaction}
+                  onCancelEdit={() => {
+                    setEditingTransaction(undefined);
+                    setShowForm(false);
+                  }}
+                />
+              </div>
+            </div>
           </div>
         )}
 
