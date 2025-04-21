@@ -11,16 +11,7 @@ import type { Transaction, Category, FinancialGoal, Budget } from './types/finan
 function App() {
   const [showForm, setShowForm] = useState(false);
   const [editingTransaction, setEditingTransaction] = useState<Transaction | undefined>();
-  const [transactions, setTransactions] = useState<Transaction[]>([
-    {
-      id: '1',
-      amount: 5000,
-      type: 'income',
-      category: 'Salário',
-      description: 'Salário Mensal',
-      date: '2024-03-01'
-    }
-  ]);
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
 
   const [categories, setCategories] = useState<Category[]>([
     { id: '1', name: 'Salário', type: 'income', color: '#00E676' },
@@ -28,19 +19,7 @@ function App() {
     { id: '3', name: 'Lazer', type: 'expense', color: '#7B61FF' }
   ]);
 
-  const [financialGoals, setFinancialGoals] = useState<FinancialGoal[]>([
-    {
-      id: '1',
-      title: 'Reserva de emergência',
-      targetAmount: 20000,
-      currentAmount: 5000,
-      category: 'Economia',
-      endDate: '2024-12-31',
-      timeframe: 'medium',
-      description: 'Fundo para emergências equivalente a 6 meses de despesas',
-      color: '#7B61FF'
-    }
-  ]);
+  const [financialGoals, setFinancialGoals] = useState<FinancialGoal[]>([]);
 
   const [budgets, setBudgets] = useState<Budget[]>([
     {
